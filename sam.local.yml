@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'continuous-update-service'
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  ContinuousUpdateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: continuous-update-service/app.handle_event
+      Runtime: ruby2.5
+      Environment:
+        Variables:
+          PLATFORM_API_BASE_URL: 'https://qa-platform.nypl.org/api/v0.1/'
+          NYPL_OAUTH_URL: https://isso.nypl.org/
+          LOG_LEVEL: debug
+          NEO4J_URL: 'http://neo4j:cartman@localhost:7474'
