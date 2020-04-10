@@ -1,0 +1,60 @@
+{
+  "114": {
+    "id": "nyplCatalogItemTypes:114",
+    "code": "114",
+    "label": "Compact disc",
+    "collectionType": [
+      "Branch"
+    ]
+  },
+  "132": {
+    "id": "nyplCatalogItemTypes:132",
+    "code": "132",
+    "label": "RFVC - FILM",
+    "collectionType": [
+      "Research",
+      "Branch"
+    ]
+  },
+  "55": {
+    "id": "nyplCatalogItemTypes:55",
+    "code": "55",
+    "label": "book, limited circ, MaRLI",
+    "requestable": true,
+    "collectionType": [
+      "Research"
+    ]
+  },
+  "7": {
+    "id": "nyplCatalogItemTypes:7",
+    "code": "7",
+    "label": "printed music, non-circ",
+    "requestable": true,
+    "collectionType": [
+      "Research"
+    ]
+  },
+  "102": {
+    "id": "nyplCatalogItemTypes:102",
+    "code": "102",
+    "label": "Book, paperback",
+    "collectionType": [
+      "Branch"
+    ]
+  },
+  "2": {
+    "id": "nyplCatalogItemTypes:2",
+    "code": "2",
+    "label": "book non-circ",
+    "requestable": true,
+    "collectionType":["Research"]
+  },
+  "101": {
+    "id": "nyplCatalogItemTypes:101",
+    "code": "101",
+    "label": "Book, circ",
+    "collectionType": [
+      "Branch"
+    ]
+  }
+}

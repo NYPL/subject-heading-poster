@@ -9,3 +9,5 @@ group :test do
   gem "test-unit"
   gem "mocha"
 end
+
+gem "json", "~> 2.3"

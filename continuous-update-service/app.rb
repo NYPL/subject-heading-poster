@@ -2,6 +2,7 @@ require 'json'
 require 'nypl_log_formatter'
 
 require_relative 'lib/avro_decoder.rb'
+require_relative '../scc-layers/is-research-service/lib/bib'
 
 def init
   return if $initialized
@@ -29,6 +30,10 @@ def handle_event(event:, context:)
 
       decoded = $avro_decoders[schema_name].decode avro_data
       $logger.debug "Decoded #{schema_name}", decoded
+
+      bib = Bib.new(decoded['nyplSource'], decoded['id'])
+
+      is_research = bib.is_research?
 
       uri = URI("http://docker.for.mac.localhost:8080/api/v0.1/bibs")
 
