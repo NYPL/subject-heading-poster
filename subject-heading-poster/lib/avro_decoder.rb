@@ -5,7 +5,7 @@ require 'base64'
 require_relative 'errors'
 
 class AvroDecoder
-  def initialize (schemaString)
+  def initialize(schemaString)
     begin
       @schema = Avro::Schema.parse(schemaString)
     rescue Exception => e
@@ -28,25 +28,25 @@ class AvroDecoder
     read_value
   end
 
-  def self.by_name (name)
+  def self.bib
     require 'net/http'
     require 'uri'
 
-    uri = URI.parse("#{ENV['PLATFORM_API_BASE_URL']}current-schemas/#{name}")
+    uri = URI.parse("#{ENV['PLATFORM_API_BASE_URL']}current-schemas/Bib")
     begin
       response = Net::HTTP.get_response(uri)
     rescue Exception => e
-      raise AvroError.new(e), "Failed to retrieve #{name} schema: #{e.message}"
+      raise AvroError.new(e), "Failed to retrieve bib schema: #{e.message}"
     end
 
     begin
       response_hash = JSON.parse(response.body)
     rescue JSON::ParserError => e
-      raise AvroError.new(e), "Retrieved #{name} schema is malformed: #{response.body}"
+      raise AvroError.new(e), "Retrieved bib schema is malformed: #{response.body}"
     end
 
-    raise AvroError.new, "Failed to retrieve #{name} schema: statusCode=#{response_hash["statusCode"]}" if response_hash["statusCode"] >= 400
-    raise AvroError.new, "Retrieved #{name} schema is malformed" if response_hash["data"].nil? || response_hash["data"]["schema"].nil?
+    raise AvroError.new("ugh"), "Failed to retrieve bib schema: statusCode=#{response_hash["statusCode"]}" if response_hash["statusCode"] >= 400
+    raise AvroError.new, "Retrieved bib schema is malformed" if response_hash["data"].nil? || response_hash["data"]["schema"].nil?
 
     self.new response_hash["data"]["schema"]
   end

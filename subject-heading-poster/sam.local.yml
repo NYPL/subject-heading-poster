@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: 'continuous-update-service'
+Description: 'subject-heading-services'
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -8,17 +8,18 @@ Globals:
     Timeout: 10
 
 Resources:
-  ContinuousUpdateFunction:
+  SubjectHeadingPoster:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      Handler: continuous-update-service/app.handle_event
+      Handler: app.handle_event
       Runtime: ruby2.5
+      Layers:
+        - arn:aws:lambda:us-east-1:946183545209:layer:isResearchLayer:6
       Environment:
         Variables:
           PLATFORM_API_BASE_URL: 'https://qa-platform.nypl.org/api/v0.1/'
           NYPL_OAUTH_URL: https://isso.nypl.org/
-          LOG_LEVEL: debug
-          NEO4J_URL: 'http://neo4j:cartman@localhost:7474'
+          LOG_LEVEL: info
           NYPL_OAUTH_ID: AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGswaQYJKoZIhvcNAQcGoFwwWgIBADBVBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDAJNGpqeEeETCmeurQIBEIAoz+HbpFuGMH/84X9UVisMtsRCo5lIguWzG6PGCf3Q97JMk6Dvo+AZeQ==
           NYPL_OAUTH_SECRET: AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAIcwgYQGCSqGSIb3DQEHBqB3MHUCAQAwcAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAwDTxUAqKkiCrdL90MCARCAQ8vxU5R+MEGRpWFPhktni6yfDNoecmxWlerXkaWk+ZUaPKdUlkTI1kDITaWnwf9VvR4N9XwGgKMLfWgM+sW72715eqc=
           NYPL_CORE_S3_BASE_URL: https://s3.amazonaws.com/nypl-core-objects-mapping-production/
