@@ -32,6 +32,8 @@ def handle_event(event:, context:)
 
       is_research = bib.is_research?
 
+      return unless is_research
+
       uri = URI("http://docker.for.mac.localhost:8080/api/v0.1/bibs")
 
       resp = Net::HTTP.post_form(uri, "data" => decoded.to_json)
