@@ -11,8 +11,8 @@ script:
 - bundle exec rspec
 deploy:
 - provider: lambda
-  function_name: IsResearchService-qa
-  description: A small service for determining if an item is research
+  function_name: SubjectHeadingPoster-qa
+  description: A service to listen to the Bib stream and post data for research bibs to the SHEP API
   region: us-east-1
   role: arn:aws:iam::946183545209:role/lambda-full-access
   runtime: ruby2.5
@@ -30,8 +30,8 @@ deploy:
   on:
     branch: qa
 - provider: lambda
-  function_name: IsResearchService-production
-  description: A small service for queuing metadata sync requests to SCSB
+  function_name: SubjectHeadingPoster-production
+  description: A service to listen to the Bib stream and post data for research bibs to the SHEP API
   region: us-east-1
   role: arn:aws:iam::946183545209:role/lambda-full-access
   runtime: ruby2.5
