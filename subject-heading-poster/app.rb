@@ -10,9 +10,9 @@ def init
   return if $initialized
 
   $logger = NyplLogFormatter.new(STDOUT, level: ENV['LOG_LEVEL'] || 'info')
-  $avro_decoder = AvroDecoder.bib
-  $nypl_core = NyplCore.new
   $platform_api = PlatformApiClient.new
+  $avro_decoder = AvroDecoder.by_name('Bib')
+  $nypl_core = NyplCore.new
 
   $initialized = true
 end
@@ -32,12 +32,12 @@ def handle_event(event:, context:)
 
       is_research = bib.is_research?
 
-      return unless is_research
+      return $logger.debug "Circulating bib #{decoded['id']}, will not process" unless is_research
 
-      uri = URI("http://docker.for.mac.localhost:8080/api/v0.1/bibs")
+      uri = URI(ENV['SHEP_API_BIBS_ENDPOINT'])
 
       resp = Net::HTTP.post_form(uri, "data" => decoded.to_json)
 
-      $logger.info "#{resp.code} #{resp.body}"
+      $logger.error "Bib #{decoded['nyplSource']} #{decoded['id']} not processed by Subject Heading (SHEP) API" if resp.code.to_i > 400
     end
 end
