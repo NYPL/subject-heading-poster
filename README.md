@@ -1,5 +1,5 @@
 # Subject Heading Poster
-The `SubjectHeadingPoster` is a Lambda listening to the `BibStream`. It pulls in the `isResearchLayer` which is a Lambda Layer deployed on AWS. The code for the Layer lives in the [`is-research-service`](https://github.com/NYPL/is-research-service) repo.
+The `SubjectHeadingPoster` is a Lambda listening to the `BibStream` to post bib data to the [Subject Heading (SHEP) API](https://github.com/NYPL/subject-headings-explorer-poc/tree/shep-api). It pulls in the `isResearchLayer` which is a Lambda Layer deployed on AWS. The code for the Layer lives in the [`is-research-service`](https://github.com/NYPL/is-research-service) repo.
 
 ## Setup
 This services use the Ruby2.5 runtime.
