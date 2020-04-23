@@ -19,38 +19,23 @@ deploy:
   module_name: app
   handler_name: handle_event
   environment_variables:
-  - PLATFORM_API_BASE_URL=https://platform.nypl.org/api/v0.1/
+  - PLATFORM_API_BASE_URL=https://qa-platform.nypl.org/api/v0.1/
   - NYPL_OAUTH_URL=https://isso.nypl.org/
   - NYPL_OAUTH_ID=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGswaQYJKoZIhvcNAQcGoFwwWgIBADBVBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDAJNGpqeEeETCmeurQIBEIAoz+HbpFuGMH/84X9UVisMtsRCo5lIguWzG6PGCf3Q97JMk6Dvo+AZeQ==
   - NYPL_OAUTH_SECRET=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAIcwgYQGCSqGSIb3DQEHBqB3MHUCAQAwcAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAwDTxUAqKkiCrdL90MCARCAQ8vxU5R+MEGRpWFPhktni6yfDNoecmxWlerXkaWk+ZUaPKdUlkTI1kDITaWnwf9VvR4N9XwGgKMLfWgM+sW72715eqc=
   - NYPL_CORE_S3_BASE_URL=https://s3.amazonaws.com/nypl-core-objects-mapping-production/
+  - log_level=debug
   skip_cleanup: true
   access_key_id: "$AWS_ACCESS_KEY_ID_QA"
   secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
   on:
     branch: qa
-- provider: lambda
-  function_name: SubjectHeadingPoster-production
-  description: A service to listen to the Bib stream and post data for research bibs to the SHEP API
-  region: us-east-1
-  role: arn:aws:iam::946183545209:role/lambda-full-access
-  runtime: ruby2.5
-  module_name: app
-  handler_name: handle_event
-  environment_variables:
-  - PLATFORM_API_BASE_URL=https://platform.nypl.org/api/v0.1/
-  - NYPL_OAUTH_URL=https://isso.nypl.org/
-  - NYPL_OAUTH_ID=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGswaQYJKoZIhvcNAQcGoFwwWgIBADBVBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDGwps2kAQ2rowHoTfAIBEIAo4NrJQ8TDmuTM8fD+Ke9RAaiLxFkE4Z1SvGE5gkSsIJ0966etTQ2+qw==
-  - NYPL_OAUTH_SECRET=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAIcwgYQGCSqGSIb3DQEHBqB3MHUCAQAwcAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAzqpSpOyAs6z7xuhIYCARCAQxQmBeJEIuw09MFA+nmoqMfE7ZvqsfLUCsOlDApqRhiEM3M3pfWOaoK7kTKR+37sgrYqSkZTZuMWGzzFTXa2z0QKB7c=
-  - NYPL_CORE_S3_BASE_URL=https://s3.amazonaws.com/nypl-core-objects-mapping-production/
-  skip_cleanup: true
-  access_key_id: "$AWS_ACCESS_KEY_ID_PRODUCTION"
-  secret_access_key: "$AWS_SECRET_ACCESS_KEY_PRODUCTION"
-  on:
-    branch: master
 notifications:
   email:
     on_failure: always
 env:
   global:
   - AWS_DEFAULT_REGION=us-east-1
+  - secure: Ct5SuTLx6ORRGWhuihI3AubsfGPIsmcMGGBtdpd57HTd3ZjC5XXXlseeYfWigvaNA3A9NT4LDxdJkcYCTpkpEXT7kCx5nalmfhTqgdxeIwr6S76lj2NsVedITc2EYeeDG/Y7D1Jb0ieX2iHdEIK0qPt2cIWlzladb0Xa9O10TsVNX58FacWs16N3/HtjytLpN3bXS+h1Wt3c0f/ts+u58rlH7fa+vmvDWuZilkW0OnS4h/fKITBvw3Hbl7PXmKIDiIk/O9zNJixLpV8RNGAAfUFYwJlgAkvqpeeNllzjjp/kfnI9DOKHW70tBvHOTEKdODmEbFskA0gIA8rfHkDTxQ8WMeryTC8fXIQtFLBOr4d1eXJo/Scf3qtydhsobMnxUw3tzfRDxlO0ItMutQGg+FWfnMEXK33iSOrL1RvBGwXw1ByVxXZZDxIkCCx6yyq81FD6qZYkzTYXFNF7vf6zZM2pGLuZso4c81nofaOiKI8s20/kC6GqTmdsES3zpK1nccFQaNfS75JinW++3WKxHXj08BWl1OuNM99houhc6PtnYMVqbnqnDrP9npvNDYuxR5bZ4fTNwD+h8FrMDILr1whva7g4gHFR+dZRZHiiv0DzjB7vjpb2umtxWC8triH9zQDgwp7KHz+x9Q9+0H155ba9YW0OnUIZfKU53dK9qmo=
+  - secure: eIqsmKiSKe4MbHIrS4NlU0mWrQzSKTQjv/ezc/1EuHGG8occ5yOg/u4Z+Oars4aoE1jlRpY83keOAZGN/YyeD2Zi0sCBI9szR5t68dzoJy/D7PhtuBrH0ifZT2VMq4JAaZUwWDZKNN6RuQByeKPdNyHnSMnKWdYotoqbZ/kYvhCWCT9bhGdNVGrWWJGQjPoXoXcrk3ofko8M5JDnOBstb0FmnEK381wGRRroVuFVvyY5ZN/+sQsjvMbVt9XIWLTBBumC+smYoOKsbqJGx7KVSWP/vdAJNoqDXwlF7zCx2CLXsHbbOGU/ge2+KsHfZfAk8wH3tqfc5RC9aVKqTLC+60Mnw2MUV2P2O2UVyXs5L3i80yQ2keKEH4DuzYsGGc0Y/scdM5pWbll58yBBjBBOPfycxtsPU2R+55LF2SJPmUKmsLrbpNYtZuy71gIj9zw3nh9kABKmH8AFyTncTVwxyaQ6YuKRIe1tTf89egkapM/DqsBg/TC8MWzLRRjnRRw23rBcGfMn+8+Z1OEIhlUj6qmHYu2HajM/dAApGrNss4kzIUHY7v/sSHyJi7vgyrhFGSPLKAVcHK1kSii5M79NmLnPJe2vufjHGE9HCwWhqr6+31O1B47pOvPeYWjEjAS3DugEQyure5E2d4Zzlw0cde6eKZJ8nHEclt/MIXYVh6w=
+  - secure: o8dkKFdP8ZD06M0DbLFSovCt2pnink6nI1Z9CT8OnI97k8H4VALup9caS4JMHsLuQcUJ79U2GgA4ot48wY28Wqc8iQ8T+X7D6FMXi4VVqpu2mld+MJAX+2pW0kdiyxJz3X+rEy6/p5EkmgfjY71OZ/1vSAcmDVVSOXk2narCPuUPYQpOz/jzzohrlPHYO4+iyVOwCZGcUHI2/2UjCNBrR9a3xGn2bRZUu4037snxB9e21Hq+qr22nSA++zzPZeWW2hH+s6kQsgp5Rr+t9rxnk7z7hwvB8PcxdzoB1u1I5akRfzjs1uG8hM+e29iZn2BK8cfxQUiMzw/CNefJdXIuK28y4Uhqiqt2HNBNC8D7r6gbz2n0higmGvgB6yQArLLVy1Pmk+T1+/E5aCbj39hEIaoTxCGFBD/eviFHeHYifaRPltgfLqtQMRz+cK4fffZtEw0QdnB3SuQVpb0M5bZOMc0knBK07Qvciw4KWuD+MKrSHf5WpoCM0GgyjylA5wbfysaR5lQo66mIcT8kwKsxEO8/T4qLvveC4w+ni/ihz8lrMwUZCfiD5ryUl/d6lCvL/XoJ5YN97ucj+msGI6zLLK2bRuNzxLE6+6rxZ7i3Al7bsgtCIK9golgkjNTTq6UeSeqjdP4JYPMCvUKaB/gjcCd+dup56SEwD8VymY4OTQQ=
