@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 ruby '2.5.0'
 
@@ -6,7 +6,8 @@ gem 'avro'
 gem 'nypl_log_formatter'
 
 group :test do
-  gem "rspec"
+  gem 'rspec'
+  gem 'webmock'
 end
 
-gem "json", "~> 2.3"
+gem 'json', "~> 2.3"
