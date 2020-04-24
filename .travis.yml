@@ -4,7 +4,7 @@ before_install:
 - gem update --system
 - gem install bundler
 install:
-- bundle install && gem pristine json --version 2.3.0
+- bundle install && gem pristine json
 cache:
 - bundler
 script:
@@ -26,10 +26,8 @@ deploy:
   - NYPL_OAUTH_SECRET=AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAIcwgYQGCSqGSIb3DQEHBqB3MHUCAQAwcAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAwDTxUAqKkiCrdL90MCARCAQ8vxU5R+MEGRpWFPhktni6yfDNoecmxWlerXkaWk+ZUaPKdUlkTI1kDITaWnwf9VvR4N9XwGgKMLfWgM+sW72715eqc=
   - NYPL_CORE_S3_BASE_URL=https://s3.amazonaws.com/nypl-core-objects-mapping-production/
   - log_level=debug
-  skip_cleanup: true
   access_key_id: "$AWS_ACCESS_KEY_ID_QA"
   secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
-  timeout: 6
   on:
     branch: qa
 notifications:
