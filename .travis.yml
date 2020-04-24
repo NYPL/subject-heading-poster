@@ -1,13 +1,16 @@
 language:
 - ruby
 before_install:
-- docker run -it --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.5 bundle install --deployment
+- gem update --system
+- gem install bundler
 install:
-- bundle install && gem pristine json
+- bundle install
 cache:
 - bundler
 script:
 - bundle exec rspec
+before_deploy:
+- docker run -it --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.5 bundle install --deployment
 deploy:
 - provider: lambda
   function_name: SubjectHeadingPoster-qa
