@@ -5,6 +5,8 @@ before_install:
 - gem install bundler
 install:
 - bundle install
+script:
+- gem pristine json --version 2.3.0
 cache:
 - bundler
 script:
