@@ -1,5 +1,7 @@
 language:
 - ruby
+before_install:
+- gem install bundler
 install:
 - bundle install
 - gem pristine json --version 2.3.0
