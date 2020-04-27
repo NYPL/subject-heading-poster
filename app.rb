@@ -30,7 +30,13 @@ def handle_event(event:, context:)
 
       bib = Bib.new(decoded['nyplSource'], decoded['id'])
 
-      is_research = bib.is_research?
+      begin
+        is_research = bib.is_research?
+      rescue DeletedError => e
+        return $logger.debug "Deleted bib #{decoded['id']}, will not process"
+      rescue => e
+        $logger.warn "Bib #{decoded['nyplSource']} #{decoded['id']} raised an exception from 'is-research' #{e}"
+      end
 
       return $logger.debug "Circulating bib #{decoded['id']}, will not process" unless is_research
 
