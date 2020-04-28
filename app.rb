@@ -30,7 +30,13 @@ def handle_event(event:, context:)
 
       bib = Bib.new(decoded['nyplSource'], decoded['id'])
 
-      is_research = bib.is_research?
+      begin
+        is_research = bib.is_research?
+      rescue DeletedError => e
+        return $logger.debug "Deleted bib #{decoded['id']}, will not process"
+      rescue => e
+        return $logger.warn "#{e.class}: #{e.message}; bib #{decoded['nyplSource']} #{decoded['id']}"
+      end
 
       return $logger.debug "Circulating bib #{decoded['id']}, will not process" unless is_research
 
@@ -39,5 +45,7 @@ def handle_event(event:, context:)
       resp = Net::HTTP.post_form(uri, "data" => decoded.to_json)
 
       $logger.error "Bib #{decoded['nyplSource']} #{decoded['id']} not processed by Subject Heading (SHEP) API" if resp.code.to_i > 400
+
+      $logger.info "Bib #{decoded['nyplSource']} #{decoded['id']} successfully processed by Subject Heading (SHEP) API" if resp.code.to_i == 201
     end
 end
