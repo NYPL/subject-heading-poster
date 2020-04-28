@@ -34,14 +34,8 @@ def handle_event(event:, context:)
         is_research = bib.is_research?
       rescue DeletedError => e
         return $logger.debug "Deleted bib #{decoded['id']}, will not process"
-      rescue ParameterError => e
-        return $logger.warn "ParameterError: #{e.message}"
-      rescue NotFoundError => e
-        return $logger.warn "NotFoundError: #{e.message}"
-      rescue DataError => e
-        return $logger.warn message: "DataError: #{e.message}"
       rescue => e
-        return $logger.warn "Bib #{decoded['nyplSource']} #{decoded['id']} raised an exception from 'is-research' #{e}"
+        return $logger.warn "#{e.class}: #{e.message}; bib #{decoded['nyplSource']} #{decoded['id']}"
       end
 
       return $logger.debug "Circulating bib #{decoded['id']}, will not process" unless is_research
