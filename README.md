@@ -42,3 +42,8 @@ To locally test a successful bib ingest, run the SHEP API (https://github.com/NY
 ```bash
 subject-heading-poster$ sam local invoke SubjectHeadingPoster --event events/[event].json --template sam.[environment].yml
 ```
+## Triggering events
+Refer to this [lsp workflow documentation](https://github.com/NYPL/lsp_workflows/blob/d66eaeceb39401a533440420aca6004ee7c3c78f/workflows/bib-and-item-data-pipeline.md#appendix-b-re-playing-updates) for a method to trigger an event on the bib stream.
+
+## Automated tests
+``bundle exec rspec -fd``
