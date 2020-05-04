@@ -13,7 +13,7 @@ before_deploy:
 - docker run -it --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.5 bundle install --deployment
 deploy:
 - provider: lambda
-  function_name: SubjectHeadingPoster-qa
+  function_name: SubjectHeadingPoster-qa-pb-copy
   description: A service to listen to the Bib stream and post data for research bibs to the SHEP API
   region: us-east-1
   role: arn:aws:iam::946183545209:role/lambda-full-access
@@ -22,6 +22,19 @@ deploy:
   handler_name: handle_event
   environment_variables:
   - PB_TEST_VARIABLE=testing-travis-deploy
+  access_key_id: "$AWS_ACCESS_KEY_ID_QA"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
+  on:
+    branch: qa-pb-test
+- provider: lambda
+  function_name: SubjectHeadingPoster-qa
+  description: A service to listen to the Bib stream and post data for research bibs to the SHEP API
+  region: us-east-1
+  role: arn:aws:iam::946183545209:role/lambda-full-access
+  runtime: ruby2.5
+  module_name: app
+  handler_name: handle_event
+  environment_variables:
   - SHEP_API_BIBS_ENDPOINT=http://subject-heading-explorer.us-east-1.elasticbeanstalk.com/api/v0.1/bibs
   - PLATFORM_API_BASE_URL=https://qa-platform.nypl.org/api/v0.1/
   - NYPL_OAUTH_URL=https://isso.nypl.org/
