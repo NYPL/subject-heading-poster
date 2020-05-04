@@ -20,7 +20,7 @@ deploy:
   runtime: ruby2.5
   module_name: app
   handler_name: handle_event
-  environment_variables:
+  environment:
   - PB_TEST_VARIABLE=testing-travis-deploy
   access_key_id: "$AWS_ACCESS_KEY_ID_QA"
   secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
