@@ -9,12 +9,10 @@ cache:
 - bundler
 script:
 - bundle exec rspec
-before_deploy:
-- docker run -it --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.5 bundle install --deployment
 deploy:
 - provider: lambda
   environment:
-  - PB_TEST_VARIABLE=testing-travis-deploy
+  - "PB_TEST_VARIABLE=testing-travis-deploy"
   function_name: SubjectHeadingPoster-qa-pb-copy
   role: arn:aws:iam::946183545209:role/lambda-full-access
   region: us-east-1
