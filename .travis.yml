@@ -13,15 +13,13 @@ before_deploy:
 - docker run -it --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.5 bundle install --deployment
 deploy:
 - provider: lambda
+  environment:
+  - PB_TEST_VARIABLE=testing-travis-deploy
   function_name: SubjectHeadingPoster-qa-pb-copy
-  description: A service to listen to the Bib stream and post data for research bibs to the SHEP API
   region: us-east-1
-  role: arn:aws:iam::946183545209:role/lambda-full-access
   runtime: ruby2.5
   module_name: app
   handler_name: handle_event
-  environment:
-  - PB_TEST_VARIABLE=testing-travis-deploy
   access_key_id: "$AWS_ACCESS_KEY_ID_QA"
   secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
   on:
