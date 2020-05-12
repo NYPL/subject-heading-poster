@@ -44,7 +44,9 @@ def handle_event(event:, context:)
 
       resp = Net::HTTP.post_form(uri, "data" => decoded.to_json)
 
-      $logger.error "Bib #{decoded['nyplSource']} #{decoded['id']} not processed by Subject Heading (SHEP) API" if resp.code.to_i > 400
+      message = JSON.parse(resp.body)["message"] if JSON.parse(resp.body)["message"]
+
+      $logger.error "Bib #{decoded['nyplSource']} #{decoded['id']} not processed by Subject Heading (SHEP) API; message: #{message}" if resp.code.to_i > 400 && message
 
       $logger.info "Bib #{decoded['nyplSource']} #{decoded['id']} successfully processed by Subject Heading (SHEP) API" if resp.code.to_i == 201
     end
