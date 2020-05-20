@@ -3,6 +3,7 @@ require 'nypl_log_formatter'
 require 'base64'
 
 require_relative '../lib/avro_decoder'
+require_relative '../lib/utils'
 
 ENV['LOG_LEVEL'] ||= 'error'
 ENV['APP_ENV'] = 'test'
