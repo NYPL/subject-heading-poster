@@ -5,7 +5,7 @@ require 'nypl_log_formatter'
 require '/opt/is-research-layer/lib/bib'
 
 require_relative 'lib/avro_decoder.rb'
-require_relative 'lib/utils.rb'
+require_relative 'lib/bib_data_manager.rb'
 
 def init
   return if $initialized
@@ -29,12 +29,8 @@ def handle_event(event:, context:)
       decoded = $avro_decoder.decode avro_data
       $logger.debug "Decoded bib", decoded
 
-      puts decoded
-
       nypl_source = decoded['nyplSource']
       bib_id = decoded['id']
-
-      return $logger.error "nyplSource #{nypl_source} not recognized" unless nypl_sources.include?(nypl_source)
 
       bib = Bib.new(nypl_source, bib_id)
 
@@ -48,18 +44,19 @@ def handle_event(event:, context:)
 
       return $logger.debug "Circulating bib #{bib_id}, will not process" unless is_research
 
-      discovery_id = discovery_id(nypl_source, bib_id)
+      # discovery id can come from BibDataManager
+      bib_data = SHEP::BibDataManager.new(decoded)
+      incoming_tagged_subject_headings = bib_data.heading_data_mgrs.map(&:tagged_label)
+
+      discovery_id = bib_data.discovery_id
+
       # make GET request to SHEP API Bib#tagged_subject_headings endpoint
       uri = URI("#{ENV['SHEP_API_BIBS_ENDPOINT']}#{discovery_id}/tagged_subject_headings")
       resp = Net::HTTP.get_response(uri)
 
       preexisting_tagged_subject_headings = JSON.parse(resp.body)["tagged_subject_headings"] if resp.code == "200"
 
-      puts preexisting_tagged_subject_headings.class
 
-      incoming_tagged_subject_headings = parse_tagged_subject_headings(decoded)
-
-      return
 
       # make POST request to SHEP API
       uri = URI(ENV['SHEP_API_BIBS_ENDPOINT'])
