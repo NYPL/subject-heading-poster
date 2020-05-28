@@ -29,7 +29,7 @@ def handle_event(event:, context:)
       decoded = $avro_decoder.decode avro_data
       $logger.debug "Decoded bib", decoded
 
-      return unless should_process decoded
+      return unless should_process? decoded
       # make POST request to SHEP API
       uri = URI(ENV['SHEP_API_BIBS_ENDPOINT'])
 
@@ -46,7 +46,7 @@ def handle_event(event:, context:)
     end
 end
 
-def should_process data
+def should_process? data
   return false unless is_research? data
 
   return false unless have_subject_headings_changed? data
