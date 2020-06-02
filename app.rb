@@ -96,7 +96,7 @@ def have_subject_headings_changed? data
 
   preexisting_tagged_subject_headings = JSON.parse(resp.body)["tagged_subject_headings"].sort;
 
-  $logger.debug "incoming_tagged_subject_headings: #{incoming_tagged_subject_headings}, preexisting_tagged_subject_headings: #{preexisting_tagged_subject_headings}"
+  $logger.info "incoming_tagged_subject_headings: #{incoming_tagged_subject_headings}, preexisting_tagged_subject_headings: #{preexisting_tagged_subject_headings}"
 
   if preexisting_tagged_subject_headings.sort == incoming_tagged_subject_headings.sort
     $logger.info "No change to subject headings for bib #{discovery_id}, will not process"
