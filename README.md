@@ -40,7 +40,7 @@ The following will invoke the lambda against various mock events. Replace `[even
 To locally test a successful bib ingest, run the SHEP API (https://github.com/NYPL/subject-headings-explorer-poc) locally. Match the port to the one in the 'SHEP_API_BIBS_ENDPOINT' in the template. E.g., 'SHEP_API_BIBS_ENDPOINT': http://docker.for.mac.localhost:8080/api/v0.1/bibs is the url for the API running on port :8080.
 
 ```bash
-subject-heading-poster$ sam local invoke SubjectHeadingPoster --event events/[event].json --template sam.[environment].yml
+sam local invoke SubjectHeadingPoster --template sam.[environment].yml --event events/[event].json
 ```
 ## Triggering events
 Refer to this [lsp workflow documentation](https://github.com/NYPL/lsp_workflows/blob/d66eaeceb39401a533440420aca6004ee7c3c78f/workflows/bib-and-item-data-pipeline.md#appendix-b-re-playing-updates) for a method to trigger an event on the bib stream.
