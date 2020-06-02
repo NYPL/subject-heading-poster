@@ -47,11 +47,7 @@ def handle_event(event:, context:)
 end
 
 def should_process? data
-  return false unless is_research? data
-
-  return false unless have_subject_headings_changed? data
-
-  return true
+  is_research?(data) && have_subject_headings_changed?(data)
 end
 
 def is_research? data
@@ -89,7 +85,9 @@ def have_subject_headings_changed? data
   uri = URI("#{ENV['SHEP_API_BIBS_ENDPOINT']}#{discovery_id}/tagged_subject_headings")
   resp = Net::HTTP.get_response(uri)
 
-  preexisting_tagged_subject_headings = JSON.parse(resp.body)["tagged_subject_headings"].sort if resp.code == "200"
+  return false if resp.code != "200"
+
+  preexisting_tagged_subject_headings = JSON.parse(resp.body)["tagged_subject_headings"].sort;
 
   $logger.debug "incoming_tagged_subject_headings: #{incoming_tagged_subject_headings}, preexisting_tagged_subject_headings: #{preexisting_tagged_subject_headings}"
 
