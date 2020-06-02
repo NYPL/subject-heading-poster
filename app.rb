@@ -85,7 +85,10 @@ def have_subject_headings_changed? data
   uri = URI("#{ENV['SHEP_API_BIBS_ENDPOINT']}#{discovery_id}/tagged_subject_headings")
   resp = Net::HTTP.get_response(uri)
 
-  return false if resp.code != "200"
+  if resp.code != "200"
+    $logger.warn "Unexpected result from SHEP API 'Bib#tagged_subject_headings' endpoint for bib #{discovery_id}. Will not process."
+    return false
+  end
 
   preexisting_tagged_subject_headings = JSON.parse(resp.body)["tagged_subject_headings"].sort;
 
