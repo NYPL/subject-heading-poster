@@ -87,7 +87,7 @@ def have_subject_headings_changed? data
 
   not_found = resp.code == "404"
 
-  return not_found && incoming_tagged_subject_headings.length > 0 if not_found 
+  return not_found && incoming_tagged_subject_headings.length > 0 if not_found
 
   unless resp.code == "200"
     $logger.warn "Unexpected result from SHEP API 'Bib#tagged_subject_headings' endpoint for bib #{discovery_id}. Will not process. Message: #{resp.message}"
@@ -96,7 +96,7 @@ def have_subject_headings_changed? data
 
   preexisting_tagged_subject_headings = JSON.parse(resp.body)["tagged_subject_headings"].sort;
 
-  $logger.debug "incoming_tagged_subject_headings: #{incoming_tagged_subject_headings}, preexisting_tagged_subject_headings: #{preexisting_tagged_subject_headings}"
+  $logger.info "incoming_tagged_subject_headings: #{incoming_tagged_subject_headings}, preexisting_tagged_subject_headings: #{preexisting_tagged_subject_headings}"
 
   if preexisting_tagged_subject_headings.sort == incoming_tagged_subject_headings.sort
     $logger.info "No change to subject headings for bib #{discovery_id}, will not process"
