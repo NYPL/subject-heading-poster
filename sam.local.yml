@@ -5,7 +5,7 @@ Description: 'subject-heading-services'
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 10
+    Timeout: 30
 
 Resources:
   SubjectHeadingPoster:
@@ -20,8 +20,6 @@ Resources:
             Stream: arn:aws:kinesis:us-east-1:946183545209:stream/Bib-qa
             BatchSize: 100
             StartingPosition: LATEST
-      Layers:
-        - arn:aws:lambda:us-east-1:946183545209:layer:isResearchLayer:8
       Environment:
         Variables:
           PLATFORM_API_BASE_URL: https://platform.nypl.org/api/v0.1/
@@ -30,4 +28,4 @@ Resources:
           NYPL_OAUTH_ID: AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAGswaQYJKoZIhvcNAQcGoFwwWgIBADBVBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDGwps2kAQ2rowHoTfAIBEIAo4NrJQ8TDmuTM8fD+Ke9RAaiLxFkE4Z1SvGE5gkSsIJ0966etTQ2+qw==
           NYPL_OAUTH_SECRET: AQECAHh7ea2tyZ6phZgT4B9BDKwguhlFtRC6hgt+7HbmeFsrsgAAAIcwgYQGCSqGSIb3DQEHBqB3MHUCAQAwcAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAzqpSpOyAs6z7xuhIYCARCAQxQmBeJEIuw09MFA+nmoqMfE7ZvqsfLUCsOlDApqRhiEM3M3pfWOaoK7kTKR+37sgrYqSkZTZuMWGzzFTXa2z0QKB7c=
           NYPL_CORE_S3_BASE_URL: https://s3.amazonaws.com/nypl-core-objects-mapping-production/
-          SHEP_API_BIBS_ENDPOINT: http://docker.for.mac.localhost:8080/api/v0.1/bibs/
+          SHEP_API_BIBS_ENDPOINT: http://docker.for.mac.localhost:3000/api/v0.1/bibs/
