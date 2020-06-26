@@ -23,8 +23,6 @@ Resources:
             MaximumRetryAttempts: 3
             BisectBatchOnFunctionError: True
             DestinationConfig: arn:aws:sns:us-east-1:946183545209:SHEP
-      Layers:
-        - arn:aws:lambda:us-east-1:946183545209:layer:isResearchLayer:8
       Environment:
         Variables:
           PLATFORM_API_BASE_URL: https://qa-platform.nypl.org/api/v0.1/

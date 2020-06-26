@@ -23,14 +23,14 @@ def handle_event(event:, context:)
   event["Records"]
     .select { |record| record["eventSource"] == "aws:kinesis" }
     .each do |record|
-        decoded_record = parse_record(record)
+      decoded_record = parse_record(record)
 
-        unless decoded_record && should_process? decoded_record
-          record_results << decoded_record == nil ? [nil, 'ERROR'] : [decoded_record['id'], 'SKIPPING']
-          next
-        end
+      unless decoded_record && should_process? decoded_record
+        record_results << decoded_record == nil ? [nil, 'ERROR'] : [decoded_record['id'], 'SKIPPING']
+        next
+      end
 
-        record_results << process_record(decoded_record)
+      record_results << process_record(decoded_record)
     end
   
   return record_results
