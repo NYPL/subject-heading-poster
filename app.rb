@@ -25,8 +25,8 @@ def handle_event(event:, context:)
     .each do |record|
       decoded_record = parse_record(record)
 
-      unless decoded_record && should_process? decoded_record
-        record_results << decoded_record == nil ? [nil, 'ERROR'] : [decoded_record['id'], 'SKIPPING']
+      unless decoded_record && should_process?(decoded_record)
+        record_results << (decoded_record ? [decoded_record['id'], 'SKIPPING'] : [nil, 'ERROR'])
         next
       end
 
@@ -55,7 +55,7 @@ def parse_record record
   return decoded
 end
 
-def process_record record
+def process_record decoded
   # make POST request to SHEP API
   uri = URI(ENV['SHEP_API_BIBS_ENDPOINT'])
 
