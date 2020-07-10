@@ -115,7 +115,8 @@ def have_subject_headings_changed? data
   resp = Net::HTTP.get_response(uri)
 
   if resp.code == "404"
-    return not_found && incoming_tagged_subject_headings.length > 0
+    $logger.info "Record Not Found and subject headings length #{incoming_tagged_subject_headings.length}"
+    return incoming_tagged_subject_headings.length > 0
   end
 
   unless resp.code == "200"
