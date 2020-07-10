@@ -29,8 +29,11 @@ class PlatformApiClient
 
     begin
       request = Net::HTTP::Get.new(uri)
+
       request["Authorization"] = "Bearer #{@access_token}" if options[:authenticated]
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme === 'https') do |http|
+      response = Net::HTTP.start(uri.hostname, uri.port,
+        use_ssl: uri.scheme === 'https',
+        :open_timeout => 5, :ssl_timeout => 5, :read_timeout => 5) do |http|
         http.request(request)
       end
 
