@@ -2,6 +2,7 @@ require 'json'
 require 'nypl_log_formatter'
 require 'base64'
 
+require_relative '../app'
 require_relative '../lib/avro_decoder'
 require_relative '../lib/bib_data_manager'
 
@@ -12,6 +13,7 @@ ENV['NYPL_OAUTH_ID'] = Base64.strict_encode64 'fake-client'
 ENV['NYPL_OAUTH_SECRET'] = Base64.strict_encode64 'fake-secret'
 ENV['NYPL_OAUTH_URL'] = 'https://isso.example.com/'
 ENV['NYPL_CORE_S3_BASE_URL'] = 'https://example.com/'
+ENV['SHEP_API_BIBS_ENDPOINT'] = 'https://example/shep_api/bib'
 
 def minimal_bib_data_manager(snake_case: true)
   bare_bib_data = {

@@ -1,5 +1,6 @@
 require 'json'
 require 'nypl_log_formatter'
+require 'parallel'
 
 require_relative 'lib/avro_decoder.rb'
 require_relative 'lib/bib_data_manager.rb'
@@ -18,28 +19,32 @@ end
 def handle_event(event:, context:)
   init
 
-  record_results = []
-
+  records_to_process = []
+  # Parse records into array for parallel processing
   event["Records"]
     .select { |record| record["eventSource"] == "aws:kinesis" }
     .each do |record|
-      decoded_record = parse_record(record)
-
-      unless decoded_record && should_process?(decoded_record)
-        record_results << (decoded_record ? [decoded_record['id'], 'SKIPPING'] : [nil, 'ERROR'])
-        next
-      end
-
-      record_results << process_record(decoded_record)
+      records_to_process << record
     end
-  
-  return record_results
+
+  # Process records in parallel
+  record_results = Parallel.map(records_to_process, in_processes: 3) { |record| process_record(record) }
+end
+
+def process_record record
+  decoded_record = parse_record(record)
+
+  unless decoded_record && should_process?(decoded_record)
+    return decoded_record ? [decoded_record['id'], 'SKIPPING'] : [nil, 'ERROR']
+  end
+
+  return store_record(decoded_record)
 end
 
 def parse_record record
   begin
     avro_data = record["kinesis"]["data"]
-  rescue KeyError => e
+  rescue *[KeyError, NoMethodError] => e
     $logger.error "Missing field in Kinesis message, unable to process #{e.message}"
     return nil 
   end
@@ -55,17 +60,17 @@ def parse_record record
   return decoded
 end
 
-def process_record decoded
+def store_record decoded
   # make POST request to SHEP API
   uri = URI(ENV['SHEP_API_BIBS_ENDPOINT'])
 
   resp = Net::HTTP.post_form(uri, "data" => decoded.to_json)
-
   if resp.code.to_i > 400
     message = JSON.parse(resp.body)["message"]
     log_message = "Bib #{decoded['nyplSource']} #{decoded['id']} not processed by Subject Heading (SHEP) API"
     log_message += "; message: #{message}" if message
     $logger.error log_message
+    return [decoded['id'], 'ERROR']
   end
 
   $logger.debug "Response", { "resp": JSON.parse(resp.body)}
