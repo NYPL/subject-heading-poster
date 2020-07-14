@@ -6,13 +6,13 @@ Description: 'subject-heading-services'
 Globals:
   Function:
     Timeout: 60
+    Handler: app.handle_event
+    Runtime: ruby2.5
 
 Resources:
   SubjectHeadingPoster:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      Handler: app.handle_event
-      Runtime: ruby2.5
       Events:
         Stream:
           Type: Kinesis
