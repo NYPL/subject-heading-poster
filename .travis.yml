@@ -47,6 +47,7 @@ deploy:
   module_name: app
   handler_name: handle_event
   environment_variables:
+  - PB_TEST_VARIABLE=testing-travis-deploy
   - SHEP_API_BIBS_ENDPOINT=http://subject-heading-explorer.us-east-1.elasticbeanstalk.com/api/v0.1/bibs
   - PLATFORM_API_BASE_URL=https://qa-platform.nypl.org/api/v0.1/
   - NYPL_OAUTH_URL=https://isso.nypl.org/
