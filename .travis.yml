@@ -59,7 +59,7 @@ deploy:
   on:
     branch: qa
 - provider: lambda
-  function_name: SubjectHeadingPoster-prod
+  function_name: SubjectHeadingPoster-production
   description: A service to listen to the Bib stream and post data for research bibs
     to the SHEP API
   region: us-east-1
