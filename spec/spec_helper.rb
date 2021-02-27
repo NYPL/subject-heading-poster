@@ -15,11 +15,11 @@ ENV['NYPL_OAUTH_URL'] = 'https://isso.example.com/'
 ENV['NYPL_CORE_S3_BASE_URL'] = 'https://example.com/'
 ENV['SHEP_API_BIBS_ENDPOINT'] = 'https://example/shep_api/bib'
 
-def minimal_bib_data_manager(snake_case: true)
+def minimal_bib_data(snake_case: true)
   bare_bib_data = {
     'id' => '123456',
     'title' => 'Minimal bib',
-    'lang' => JSON.dump({ 'code' => 'eng' }),
+    'lang' => JSON.dump({ 'code' => 'eng' })
   }
 
   var_fields_key = snake_case ? 'var_fields' : 'varFields'
@@ -27,6 +27,9 @@ def minimal_bib_data_manager(snake_case: true)
 
   bare_bib_data[var_fields_key] = JSON.dump({})
   bare_bib_data[nypl_source_key] = 'sierra_nypl'
+  bare_bib_data
+end
 
-  SHEP::BibDataManager.new(bare_bib_data)
+def minimal_bib_data_manager(snake_case: true)
+  SHEP::BibDataManager.new(minimal_bib_data(snake_case: snake_case))
 end
