@@ -3,6 +3,8 @@ require_relative 'subject_component_data_manager'
 require_relative 'subfield_data_manager'
 
 class SHEP
+  class BibDataManagerError < StandardError; end
+
   class BibDataManager
     attr_reader :institution, :bib_id, :heading_data_mgrs, :discovery_id
 

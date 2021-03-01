@@ -173,6 +173,10 @@ describe "handler" do
   end
 
   describe "#have_subject_headings_changed?" do
-    # TODO
+    it 'should return false with title-less bib data' do
+      bib_data = minimal_bib_data.reject { |k,_| k == 'title' }
+
+      expect(have_subject_headings_changed? bib_data).to eq(false)
+    end
   end 
 end

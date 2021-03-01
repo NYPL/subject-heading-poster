@@ -106,7 +106,7 @@ def have_subject_headings_changed? data
   # discovery id can come from BibDataManager
   begin
     bib_data = SHEP::BibDataManager.new(data)
-  rescue BibDataManagerError => e
+  rescue SHEP::BibDataManagerError => e
     $logger.error "Unable to process record due to: #{e.message}"
     return false
   end
