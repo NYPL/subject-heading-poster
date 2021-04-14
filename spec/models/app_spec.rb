@@ -15,7 +15,7 @@ describe "handler" do
   describe "#handle_event" do
     it "should process all events passed in" do
       test_records = [{"eventSource" => "aws:kinesis", :rec => 1}, {"eventSource" => "aws:kinesis", :rec => 2}]
-      allow(Parallel).to receive(:map).with(test_records, in_processes: 3).and_return([true, true])
+      allow(Parallel).to receive(:map).with(test_records, in_processes: 2).and_return([true, true])
   
       records_status = handle_event(event: {"Records" => test_records}, context: {})
       expect(records_status).to eq([true, true])
