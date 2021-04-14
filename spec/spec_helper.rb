@@ -14,6 +14,7 @@ ENV['NYPL_OAUTH_SECRET'] = Base64.strict_encode64 'fake-secret'
 ENV['NYPL_OAUTH_URL'] = 'https://isso.example.com/'
 ENV['NYPL_CORE_S3_BASE_URL'] = 'https://example.com/'
 ENV['SHEP_API_BIBS_ENDPOINT'] = 'https://example/shep_api/bib'
+ENV['PARALLEL_PROCESSES'] = '2'
 
 def minimal_bib_data(snake_case: true)
   bare_bib_data = {
