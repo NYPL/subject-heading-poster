@@ -35,7 +35,7 @@ describe "handler" do
 
     it "should invoke store_record if record is processable" do
       allow(self).to receive(:parse_record).and_return(@record)
-      allow(self).to receive(:should_process?).with(@record).and_return(true)
+      allow(self).to receive(:is_research?).with(@record).and_return(true)
       allow(self).to receive(:store_record).with(@record).and_return(true)
 
       result = process_record(@record)
@@ -43,9 +43,9 @@ describe "handler" do
       expect(result).to eq(true)
     end
 
-    it "should return SKIPPING STATUS if should_process? is false" do
+    it "should return SKIPPING STATUS if is_research? is false" do
       allow(self).to receive(:parse_record).and_return(@record)
-      allow(self).to receive(:should_process?).with(@record).and_return(false)
+      allow(self).to receive(:is_research?).with(@record).and_return(false)
 
       result = process_record(@record)
 
@@ -120,24 +120,6 @@ describe "handler" do
 
       output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
       expect(output).to eq([1, 'ERROR'])
-    end
-  end
-
-  describe "#should_process?" do
-    before(:each) {
-      allow(self).to receive(:is_research?)
-    }
-    
-    it "should return true if is_research returns true" do
-      expect(self).to receive(:is_research?).with('data').and_return(true)
-
-      expect(should_process?('data')).to eq(true)
-    end
-    
-    it "should return false if is_research is false" do
-      expect(self).to receive(:is_research?).with('data').and_return(false)
-
-      expect(should_process?('data')).to eq(false)
     end
   end
 

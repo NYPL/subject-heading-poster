@@ -33,11 +33,10 @@ end
 def process_record record
   decoded_record = parse_record(record)
 
-  unless decoded_record && should_process?(decoded_record)
-    return decoded_record ? [decoded_record['id'], 'SKIPPING'] : [nil, 'ERROR']
-  end
+  return [nil, 'ERROR'] unless decoded_record
+  return [decoded_record['id'], 'SKIPPING'] unless is_research?(decoded_record)
 
-  return store_record(decoded_record)
+  store_record(decoded_record)
 end
 
 def parse_record record
@@ -76,10 +75,6 @@ def store_record decoded
 
   $logger.info "Bib #{decoded['nyplSource']} #{decoded['id']} successfully processed by Subject Heading (SHEP) API" if resp.code.to_i == 201
   return [decoded['id'], 'SUCCESS']
-end
-
-def should_process? data
-  is_research?(data)
 end
 
 def is_research? data
