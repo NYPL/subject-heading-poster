@@ -126,26 +126,16 @@ describe "handler" do
   describe "#should_process?" do
     before(:each) {
       allow(self).to receive(:is_research?)
-      allow(self).to receive(:have_subject_headings_changed?)
     }
     
-    it "should return true if is_research and have_subject_headings_changed return true" do
+    it "should return true if is_research returns true" do
       expect(self).to receive(:is_research?).with('data').and_return(true)
-      expect(self).to receive(:have_subject_headings_changed?).with('data').and_return(true)
 
       expect(should_process?('data')).to eq(true)
     end
     
-    it "should return false if is_research is false and not call have_subject_headings_changed?" do
+    it "should return false if is_research is false" do
       expect(self).to receive(:is_research?).with('data').and_return(false)
-      expect(self).to_not receive(:have_subject_headings_changed?).with('data')
-
-      expect(should_process?('data')).to eq(false)
-    end
-    
-    it "should return false if have_subject_headings_changed returns false" do
-      expect(self).to receive(:is_research?).with('data').and_return(true)
-      expect(self).to receive(:have_subject_headings_changed?).with('data').and_return(false)
 
       expect(should_process?('data')).to eq(false)
     end
@@ -171,12 +161,4 @@ describe "handler" do
       expect(is_research?({'nyplSource' => 'test-nypl', 'id' => '1'})).to eq(false)
     end
   end
-
-  describe "#have_subject_headings_changed?" do
-    it 'should return false with title-less bib data' do
-      bib_data = minimal_bib_data.reject { |k,_| k == 'title' }
-
-      expect(have_subject_headings_changed? bib_data).to eq(false)
-    end
-  end 
 end

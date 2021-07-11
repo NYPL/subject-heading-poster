@@ -3,7 +3,6 @@ require 'nypl_log_formatter'
 require 'parallel'
 
 require_relative 'lib/avro_decoder.rb'
-require_relative 'lib/bib_data_manager.rb'
 require_relative 'lib/platform_api_client.rb'
 
 def init
@@ -80,7 +79,7 @@ def store_record decoded
 end
 
 def should_process? data
-  is_research?(data) && have_subject_headings_changed?(data)
+  is_research?(data)
 end
 
 def is_research? data
@@ -96,45 +95,6 @@ def is_research? data
   
   unless research_status["isResearch"]
     $logger.debug "Circulating bib #{bib_id}, will not process"
-    return false
-  end
-
-  return true
-end
-
-def have_subject_headings_changed? data
-  # discovery id can come from BibDataManager
-  begin
-    bib_data = SHEP::BibDataManager.new(data)
-  rescue SHEP::BibDataManagerError => e
-    $logger.error "Unable to process record due to: #{e.message}"
-    return false
-  end
-
-  incoming_tagged_subject_headings = bib_data.heading_data_mgrs.map(&:tagged_label).sort
-
-  discovery_id = bib_data.discovery_id
-
-  # make GET request to SHEP API Bib#tagged_subject_headings endpoint
-  uri = URI("#{ENV['SHEP_API_BIBS_ENDPOINT']}#{discovery_id}/tagged_subject_headings")
-  resp = Net::HTTP.get_response(uri)
-
-  if resp.code == "404"
-    $logger.info "Record Not Found and subject headings length #{incoming_tagged_subject_headings.length}"
-    return incoming_tagged_subject_headings.length > 0
-  end
-
-  unless resp.code == "200"
-    $logger.warn "Unexpected result from SHEP API 'Bib#tagged_subject_headings' endpoint for bib #{discovery_id}. Will not process. Message: #{resp.message}"
-    return false
-  end
-
-  preexisting_tagged_subject_headings = JSON.parse(resp.body)["tagged_subject_headings"].sort;
-
-  $logger.info "incoming_tagged_subject_headings: #{incoming_tagged_subject_headings}, preexisting_tagged_subject_headings: #{preexisting_tagged_subject_headings}"
-
-  if preexisting_tagged_subject_headings.sort == incoming_tagged_subject_headings.sort
-    $logger.info "No change to subject headings for bib #{discovery_id}, will not process"
     return false
   end
 
