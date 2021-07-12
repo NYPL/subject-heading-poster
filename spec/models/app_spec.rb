@@ -106,14 +106,29 @@ describe "handler" do
   describe "#store_record" do
     before(:each) { allow(Net::HTTP).to receive(:post_form) }
 
-    it "should return success if SHEP API returns 200" do
-      resp = double("response", :code => '200', :body => JSON.dump({'message' => 'success'}))
+    it "should return success if SHEP API returns 201" do
+      resp = double('response', code: '201', body: JSON.dump({'message' => 'success'}))
       expect(Net::HTTP).to receive(:post_form).and_return(resp)
 
       output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
       expect(output).to eq([1, 'SUCCESS'])
     end
 
+    it 'should return not-modified if SHEP API returns 304' do
+      resp = double('response', code:  '304', body: nil)
+      expect(Net::HTTP).to receive(:post_form).and_return(resp)
+
+      output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
+      expect(output).to eq([1, 'NOT MODIFIED'])
+    end
+ 
+    it 'should return nil if SHEP API returns 200 (which the API should not do)' do
+      resp = double('response', code:  '200', body: JSON.dump({'message' => 'success'}))
+      expect(Net::HTTP).to receive(:post_form).and_return(resp)
+
+      output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
+      expect(output).to eq(nil)
+    end
     it "should return error if SHEP API returns 400+" do
       resp = double("response", :code => '403', :body => JSON.dump({'message' => 'error'}))
       expect(Net::HTTP).to receive(:post_form).and_return(resp)

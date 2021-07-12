@@ -71,10 +71,15 @@ def store_record decoded
     return [decoded['id'], 'ERROR']
   end
 
-  $logger.debug "Response", { "resp": JSON.parse(resp.body)}
+  $logger.debug 'Response', { code: resp.code.to_i, resp: resp.body }
 
-  $logger.info "Bib #{decoded['nyplSource']} #{decoded['id']} successfully processed by Subject Heading (SHEP) API" if resp.code.to_i == 201
-  return [decoded['id'], 'SUCCESS']
+  if resp.code.to_i == 304
+    $logger.info "Bib #{decoded['nyplSource']} #{decoded['id']} had no modifications for Subject Heading (SHEP) API"
+    return [decoded['id'], 'NOT MODIFIED']
+  elsif resp.code.to_i == 201
+    $logger.info "Bib #{decoded['nyplSource']} #{decoded['id']} successfully processed by Subject Heading (SHEP) API"
+    return [decoded['id'], 'SUCCESS']
+  end
 end
 
 def is_research? data
