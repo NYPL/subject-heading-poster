@@ -27,7 +27,7 @@ def handle_event(event:, context:)
     end
 
   # Process records in parallel
-  record_results = Parallel.map(records_to_process, in_processes: ENV['PARALLEL_PROCESSES'].to_i) { |record| process_record(record) }
+  Parallel.map(records_to_process, in_processes: ENV['PARALLEL_PROCESSES'].to_i) { |record| process_record(record) }
 end
 
 def process_record record
