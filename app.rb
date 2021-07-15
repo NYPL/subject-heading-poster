@@ -79,6 +79,9 @@ def store_record decoded
   elsif resp.code.to_i == 201
     $logger.info "Bib #{decoded['nyplSource']} #{decoded['id']} successfully processed by Subject Heading (SHEP) API"
     return [decoded['id'], 'SUCCESS']
+  else
+    $logger.error "Bib #{decoded['nyplSource']} #{decoded['id']} got unexpected #{resp.code.to_i} response from SHEP"
+    return [decoded['id'], 'UNEXPECTED RESPONSE']
   end
 end
 

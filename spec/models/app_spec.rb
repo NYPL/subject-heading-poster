@@ -122,13 +122,14 @@ describe "handler" do
       expect(output).to eq([1, 'NOT MODIFIED'])
     end
  
-    it 'should return nil if SHEP API returns 200 (which the API should not do)' do
+    it 'should return unexpected response if SHEP API returns 200 (which the API should not do)' do
       resp = double('response', code:  '200', body: JSON.dump({'message' => 'success'}))
       expect(Net::HTTP).to receive(:post_form).and_return(resp)
 
       output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
-      expect(output).to eq(nil)
+      expect(output).to eq([1, 'UNEXPECTED RESPONSE'])
     end
+
     it "should return error if SHEP API returns 400+" do
       resp = double("response", :code => '403', :body => JSON.dump({'message' => 'error'}))
       expect(Net::HTTP).to receive(:post_form).and_return(resp)
