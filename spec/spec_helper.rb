@@ -4,7 +4,6 @@ require 'base64'
 
 require_relative '../app'
 require_relative '../lib/avro_decoder'
-require_relative '../lib/bib_data_manager'
 
 ENV['LOG_LEVEL'] ||= 'error'
 ENV['APP_ENV'] = 'test'
