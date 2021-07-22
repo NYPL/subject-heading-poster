@@ -35,7 +35,7 @@ describe "handler" do
 
     it "should invoke store_record if record is processable" do
       allow(self).to receive(:parse_record).and_return(@record)
-      allow(self).to receive(:should_process?).with(@record).and_return(true)
+      allow(self).to receive(:is_research?).with(@record).and_return(true)
       allow(self).to receive(:store_record).with(@record).and_return(true)
 
       result = process_record(@record)
@@ -43,9 +43,9 @@ describe "handler" do
       expect(result).to eq(true)
     end
 
-    it "should return SKIPPING STATUS if should_process? is false" do
+    it "should return SKIPPING STATUS if is_research? is false" do
       allow(self).to receive(:parse_record).and_return(@record)
-      allow(self).to receive(:should_process?).with(@record).and_return(false)
+      allow(self).to receive(:is_research?).with(@record).and_return(false)
 
       result = process_record(@record)
 
@@ -106,12 +106,28 @@ describe "handler" do
   describe "#store_record" do
     before(:each) { allow(Net::HTTP).to receive(:post_form) }
 
-    it "should return success if SHEP API returns 200" do
-      resp = double("response", :code => '200', :body => JSON.dump({'message' => 'success'}))
+    it "should return success if SHEP API returns 201" do
+      resp = double('response', code: '201', body: JSON.dump({'message' => 'success'}))
       expect(Net::HTTP).to receive(:post_form).and_return(resp)
 
       output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
       expect(output).to eq([1, 'SUCCESS'])
+    end
+
+    it 'should return not-modified if SHEP API returns 304' do
+      resp = double('response', code:  '304', body: nil)
+      expect(Net::HTTP).to receive(:post_form).and_return(resp)
+
+      output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
+      expect(output).to eq([1, 'NOT MODIFIED'])
+    end
+ 
+    it 'should return unexpected response if SHEP API returns 200 (which the API should not do)' do
+      resp = double('response', code:  '200', body: JSON.dump({'message' => 'success'}))
+      expect(Net::HTTP).to receive(:post_form).and_return(resp)
+
+      output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
+      expect(output).to eq([1, 'UNEXPECTED RESPONSE'])
     end
 
     it "should return error if SHEP API returns 400+" do
@@ -120,34 +136,6 @@ describe "handler" do
 
       output = store_record({'id' => 1, 'nypl-source' => 'nypl-test'})
       expect(output).to eq([1, 'ERROR'])
-    end
-  end
-
-  describe "#should_process?" do
-    before(:each) {
-      allow(self).to receive(:is_research?)
-      allow(self).to receive(:have_subject_headings_changed?)
-    }
-    
-    it "should return true if is_research and have_subject_headings_changed return true" do
-      expect(self).to receive(:is_research?).with('data').and_return(true)
-      expect(self).to receive(:have_subject_headings_changed?).with('data').and_return(true)
-
-      expect(should_process?('data')).to eq(true)
-    end
-    
-    it "should return false if is_research is false and not call have_subject_headings_changed?" do
-      expect(self).to receive(:is_research?).with('data').and_return(false)
-      expect(self).to_not receive(:have_subject_headings_changed?).with('data')
-
-      expect(should_process?('data')).to eq(false)
-    end
-    
-    it "should return false if have_subject_headings_changed returns false" do
-      expect(self).to receive(:is_research?).with('data').and_return(true)
-      expect(self).to receive(:have_subject_headings_changed?).with('data').and_return(false)
-
-      expect(should_process?('data')).to eq(false)
     end
   end
 
@@ -171,12 +159,4 @@ describe "handler" do
       expect(is_research?({'nyplSource' => 'test-nypl', 'id' => '1'})).to eq(false)
     end
   end
-
-  describe "#have_subject_headings_changed?" do
-    it 'should return false with title-less bib data' do
-      bib_data = minimal_bib_data.reject { |k,_| k == 'title' }
-
-      expect(have_subject_headings_changed? bib_data).to eq(false)
-    end
-  end 
 end
