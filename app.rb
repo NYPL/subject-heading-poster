@@ -86,19 +86,17 @@ def store_record decoded
 end
 
 def is_research? data
-  var_fields_json = data['varFields'] || ''
+  var_fields_json = data['varFields'] || '[]'
   begin 
     var_fields = JSON.parse(var_fields_json)
   rescue JSON::ParserError
   end
 
-  if var_fields
-    field_911 = var_fields.find { |vf| vf['marcTag'] == '911' and vf['subfields'].find { |sf| sf['tag'] == 'a' } }
+  var_fields.each do |vf|
+    if vf['marcTag'] == '911'
+      subfield_a = vf['subfields'].find { |sf| sf['tag'] == 'a' }
 
-    if field_911
-      subfield_a = field_911['subfields'].find { |sf| sf['tag'] == 'a' }
-
-      return subfield_a['content'] == 'RL'
+      return subfield_a['content'] == 'RL' if subfield_a
     end
   end
 
