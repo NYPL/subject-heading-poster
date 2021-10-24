@@ -213,6 +213,21 @@ describe "handler" do
       expect(is_research?({'varFields' => json_varfields})).to eq(false)
     end
 
+    it "should ignore 911 without an 'a' subfield, processing a later one with an 'a' subfield" do
+      json_varfields = JSON.dump([
+        {
+          'marcTag' => '911',
+          'subfields' => [{ 'content' => 'BL', 'tag' => 'b' }]
+        },
+        {
+          'marcTag' => '911',
+          'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
+        }
+      ])
+
+      expect(is_research?({'varFields' => json_varfields})).to eq(true)
+    end
+
     it "should return true if API response is true" do
       expect($platform_api).to receive(:get).with('bibs/test-nypl/1/is-research').and_return({"isResearch" => true})
       expect(is_research?({'nyplSource' => 'test-nypl', 'id' => '1'})).to eq(true)

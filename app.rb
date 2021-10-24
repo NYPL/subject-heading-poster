@@ -93,14 +93,12 @@ def is_research? data
   end
 
   if var_fields
-    field_911 = var_fields.find { |vf| vf['marcTag'] == '911' }
+    field_911 = var_fields.find { |vf| vf['marcTag'] == '911' and vf['subfields'].find { |sf| sf['tag'] == 'a' } }
 
     if field_911
       subfield_a = field_911['subfields'].find { |sf| sf['tag'] == 'a' }
 
-      if subfield_a
-        return subfield_a['content'] == 'RL'
-      end
+      return subfield_a['content'] == 'RL'
     end
   end
 
