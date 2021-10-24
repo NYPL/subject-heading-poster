@@ -92,12 +92,10 @@ def is_research? data
   rescue JSON::ParserError
   end
 
-  var_fields.each do |vf|
-    if vf['marcTag'] == '911'
-      subfield_a = vf['subfields'].find { |sf| sf['tag'] == 'a' }
+  var_fields.select { |vf| vf['marcTag'] == '911' }.each do |vf_911|
+    subfield_a = vf_911['subfields'].find { |sf| sf['tag'] == 'a' }
 
-      return subfield_a['content'] == 'RL' if subfield_a
-    end
+    return subfield_a['content'] == 'RL' if subfield_a
   end
 
   # Only get here if there was no 911$a field set
