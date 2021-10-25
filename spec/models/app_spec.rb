@@ -171,7 +171,7 @@ describe "handler" do
       expect(is_research?({'varFields' => json_varfields})).to eq(false)
     end
 
-    # It's only the 911$a Marc field that we know is used for this. A 911 field with anything else could be 
+    # It's only the 911|a Marc field that we know is used for this. A 911 field with anything else could be 
     #   for a different purpose so it tells us nothing about the research status of this Bib
     it "should fallback to API if there is a 911 field with subfield tag other than a" do
       json_varfields = JSON.dump([{
@@ -183,7 +183,7 @@ describe "handler" do
       expect(is_research?({'id' => '1', 'nyplSource' => 'test-nypl', 'varFields' => json_varfields})).to eq(true)
     end
 
-    it "should take the first 911$a field if there are multiples (RL first test)" do
+    it "should take the first 911|a field if there are multiples (RL first test)" do
       json_varfields = JSON.dump([
         {
           'marcTag' => '911',
@@ -198,7 +198,7 @@ describe "handler" do
       expect(is_research?({'varFields' => json_varfields})).to eq(true)
     end
 
-    it "should take the first 911$a field if there are multiples (BL first test)" do
+    it "should take the first 911|a field if there are multiples (BL first test)" do
       json_varfields = JSON.dump([
         {
           'marcTag' => '911',
