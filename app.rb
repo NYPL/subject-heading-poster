@@ -86,6 +86,20 @@ def store_record decoded
 end
 
 def is_research? data
+  var_fields_json = data['varFields'] || '[]'
+  begin 
+    var_fields = JSON.parse(var_fields_json)
+  rescue JSON::ParserError
+  end
+
+  marc911_var_fields = var_fields.select { |vf| vf['marcTag'] == '911' }
+  marc911_var_fields.each do |m911_vf|
+    subfield_a = m911_vf['subfields'].find { |sf| sf['tag'] == 'a' }
+
+    return subfield_a['content'] == 'RL' if subfield_a
+  end
+
+  # Only get here if no 911$a field set (once all records have a 911$a the rest of this method can be deleted)
   nypl_source = data['nyplSource']
   bib_id = data['id']
 
@@ -97,7 +111,7 @@ def is_research? data
   end
   
   unless research_status["isResearch"]
-    $logger.debug "Circulating bib #{bib_id}, will not process"
+    $logger.debug "Bib #{bib_id} determined as Circulating by is_research service, will not process"
     return false
   end
 
