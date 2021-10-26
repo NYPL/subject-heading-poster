@@ -99,7 +99,7 @@ def is_research? data
     return subfield_a['content'] == 'RL' if subfield_a
   end
 
-  # Only get here if no 911|a field set (once all records have a 911|a the rest of this method can be deleted)
+  # Only get here if no 911$a field set (once all records have a 911$a the rest of this method can be deleted)
   nypl_source = data['nyplSource']
   bib_id = data['id']
 
