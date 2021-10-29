@@ -92,14 +92,14 @@ def is_research? data
   rescue JSON::ParserError
   end
 
-  marc911_var_fields = var_fields.select { |vf| vf['marcTag'] == '911' }
-  marc911_var_fields.each do |m911_vf|
-    subfield_a = m911_vf['subfields'].find { |sf| sf['tag'] == 'a' }
+  marc910_var_fields = var_fields.select { |vf| vf['marcTag'] == '910' }
+  marc910_var_fields.each do |m910_vf|
+    subfield_a = m910_vf['subfields'].find { |sf| sf['tag'] == 'a' }
 
     return subfield_a['content'] == 'RL' if subfield_a
   end
 
-  # Only get here if no 911$a field set (once all records have a 911$a the rest of this method can be deleted)
+  # Only get here if no 910|a field set (once all records have a 910|a the rest of this method can be deleted)
   nypl_source = data['nyplSource']
   bib_id = data['id']
 
