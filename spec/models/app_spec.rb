@@ -144,38 +144,38 @@ describe "handler" do
       allow($platform_api).to receive(:get)
     }
 
-    it "should return true if there is a 911 field with subfield tag of a and a value of RL" do
+    it "should return true if there is a 910 field with subfield tag of a and a value of RL" do
       json_varfields = JSON.dump([{
-        'marcTag' => '911',
+        'marcTag' => '910',
         'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
       }])
 
       expect(is_research?({'varFields' => json_varfields})).to eq(true)
     end
 
-    it "should return false if there is a 911 field with subfield tag of a and a value of BL" do
+    it "should return false if there is a 910 field with subfield tag of a and a value of BL" do
       json_varfields = JSON.dump([{
-        'marcTag' => '911',
+        'marcTag' => '910',
         'subfields' => [{ 'content' => 'BL', 'tag' => 'a' }]
       }])
 
       expect(is_research?({'varFields' => json_varfields})).to eq(false)
     end
 
-    it "should return false if there is a 911 field with subfield tag of a and a value of anything else" do
+    it "should return false if there is a 910 field with subfield tag of a and a value of anything else" do
       json_varfields = JSON.dump([{
-        'marcTag' => '911',
+        'marcTag' => '910',
         'subfields' => [{ 'content' => 'RLOTF', 'tag' => 'a' }]
       }])
 
       expect(is_research?({'varFields' => json_varfields})).to eq(false)
     end
 
-    # It's only the 911$a Marc field that we know is used for this. A 911 field with anything else could be 
+    # It's only the 910|a Marc field that we know is used for this. A 910 field with anything else could be 
     #   for a different purpose so it tells us nothing about the research status of this Bib
-    it "should fallback to API if there is a 911 field with subfield tag other than a" do
+    it "should fallback to API if there is a 910 field with subfield tag other than a" do
       json_varfields = JSON.dump([{
-        'marcTag' => '911',
+        'marcTag' => '910',
         'subfields' => [{ 'content' => 'RL', 'tag' => 'z' }]
       }])
 
@@ -183,14 +183,14 @@ describe "handler" do
       expect(is_research?({'id' => '1', 'nyplSource' => 'test-nypl', 'varFields' => json_varfields})).to eq(true)
     end
 
-    it "should take the first 911$a field if there are multiples (RL first test)" do
+    it "should take the first 910|a field if there are multiples (RL first test)" do
       json_varfields = JSON.dump([
         {
-          'marcTag' => '911',
+          'marcTag' => '910',
           'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
         },
         {
-          'marcTag' => '911',
+          'marcTag' => '910',
           'subfields' => [{ 'content' => 'BL', 'tag' => 'a' }]
         }
       ])
@@ -198,14 +198,14 @@ describe "handler" do
       expect(is_research?({'varFields' => json_varfields})).to eq(true)
     end
 
-    it "should take the first 911$a field if there are multiples (BL first test)" do
+    it "should take the first 910|a field if there are multiples (BL first test)" do
       json_varfields = JSON.dump([
         {
-          'marcTag' => '911',
+          'marcTag' => '910',
           'subfields' => [{ 'content' => 'BL', 'tag' => 'a' }]
         },
         {
-          'marcTag' => '911',
+          'marcTag' => '910',
           'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
         }
       ])
@@ -213,14 +213,14 @@ describe "handler" do
       expect(is_research?({'varFields' => json_varfields})).to eq(false)
     end
 
-    it "should ignore 911 without an 'a' subfield, processing a later one with an 'a' subfield" do
+    it "should ignore 910 without an 'a' subfield, processing a later one with an 'a' subfield" do
       json_varfields = JSON.dump([
         {
-          'marcTag' => '911',
+          'marcTag' => '910',
           'subfields' => [{ 'content' => 'BL', 'tag' => 'b' }]
         },
         {
-          'marcTag' => '911',
+          'marcTag' => '910',
           'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
         }
       ])
