@@ -56,6 +56,7 @@ deploy:
   - NYPL_CORE_S3_BASE_URL=https://s3.amazonaws.com/nypl-core-objects-mapping-production/
   - LOG_LEVEL=debug
   - PARALLEL_PROCESSES='2'
+  skip_cleanup: true
   access_key_id: "$AWS_ACCESS_KEY_ID_QA"
   secret_access_key: "$AWS_SECRET_ACCESS_KEY_QA"
   on:
