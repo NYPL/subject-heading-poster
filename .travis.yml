@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-- 2.7.1
+- 2.5
 before_install:
 - gem update --system
 - gem install bundler
@@ -20,7 +20,7 @@ deploy:
     to the SHEP API
   region: us-east-1
   role: arn:aws:iam::224280085904:role/lambda_basic_execution
-  runtime: ruby2.7
+  runtime: ruby2.5
   timeout: 60
   module_name: app
   handler_name: handle_event
@@ -43,7 +43,7 @@ deploy:
     to the SHEP API
   region: us-east-1
   role: arn:aws:iam::946183545209:role/lambda-full-access
-  runtime: ruby2.7
+  runtime: ruby2.5
   timeout: 60
   module_name: app
   handler_name: handle_event
@@ -66,7 +66,7 @@ deploy:
     to the SHEP API
   region: us-east-1
   role: arn:aws:iam::946183545209:role/lambda-full-access
-  runtime: ruby2.7
+  runtime: ruby2.5
   timeout: 60
   module_name: app
   handler_name: handle_event
