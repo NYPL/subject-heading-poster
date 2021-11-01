@@ -86,11 +86,7 @@ def store_record decoded
 end
 
 def is_research? data
-  var_fields_json = data['varFields'] || '[]'
-  begin 
-    var_fields = JSON.parse(var_fields_json)
-  rescue JSON::ParserError
-  end
+  var_fields = data['varFields'] || []
 
   marc910_var_fields = var_fields.select { |vf| vf['marcTag'] == '910' }
   marc910_var_fields.each do |m910_vf|
