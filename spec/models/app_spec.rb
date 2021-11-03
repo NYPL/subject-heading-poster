@@ -144,6 +144,90 @@ describe "handler" do
       allow($platform_api).to receive(:get)
     }
 
+    it "should return true if there is a 910 field with subfield tag of a and a value of RL" do
+      varfields = [{
+        'marcTag' => '910',
+        'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
+      }]
+
+      expect(is_research?({'varFields' => varfields})).to eq(true)
+    end
+
+    it "should return false if there is a 910 field with subfield tag of a and a value of BL" do
+      varfields = [{
+        'marcTag' => '910',
+        'subfields' => [{ 'content' => 'BL', 'tag' => 'a' }]
+      }]
+
+      expect(is_research?({'varFields' => varfields})).to eq(false)
+    end
+
+    it "should return false if there is a 910 field with subfield tag of a and a value of anything else" do
+      varfields = [{
+        'marcTag' => '910',
+        'subfields' => [{ 'content' => 'RLOTF', 'tag' => 'a' }]
+      }]
+
+      expect(is_research?({'varFields' => varfields})).to eq(false)
+    end
+
+    # It's only the 910|a Marc field that we know is used for this. A 910 field with anything else could be 
+    #   for a different purpose so it tells us nothing about the research status of this Bib
+    it "should fallback to API if there is a 910 field with subfield tag other than a" do
+      varfields = [{
+        'marcTag' => '910',
+        'subfields' => [{ 'content' => 'RL', 'tag' => 'z' }]
+      }]
+
+      expect($platform_api).to receive(:get).with('bibs/test-nypl/1/is-research').and_return({"isResearch" => true})
+      expect(is_research?({'id' => '1', 'nyplSource' => 'test-nypl', 'varFields' => varfields})).to eq(true)
+    end
+
+    it "should take the first 910|a field if there are multiples (RL first test)" do
+      varfields = [
+        {
+          'marcTag' => '910',
+          'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
+        },
+        {
+          'marcTag' => '910',
+          'subfields' => [{ 'content' => 'BL', 'tag' => 'a' }]
+        }
+      ]
+
+      expect(is_research?({'varFields' => varfields})).to eq(true)
+    end
+
+    it "should take the first 910|a field if there are multiples (BL first test)" do
+      varfields = [
+        {
+          'marcTag' => '910',
+          'subfields' => [{ 'content' => 'BL', 'tag' => 'a' }]
+        },
+        {
+          'marcTag' => '910',
+          'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
+        }
+      ]
+
+      expect(is_research?({'varFields' => varfields})).to eq(false)
+    end
+
+    it "should ignore 910 without an 'a' subfield, processing a later one with an 'a' subfield" do
+      varfields = [
+        {
+          'marcTag' => '910',
+          'subfields' => [{ 'content' => 'BL', 'tag' => 'b' }]
+        },
+        {
+          'marcTag' => '910',
+          'subfields' => [{ 'content' => 'RL', 'tag' => 'a' }]
+        }
+      ]
+
+      expect(is_research?({'varFields' => varfields})).to eq(true)
+    end
+
     it "should return true if API response is true" do
       expect($platform_api).to receive(:get).with('bibs/test-nypl/1/is-research').and_return({"isResearch" => true})
       expect(is_research?({'nyplSource' => 'test-nypl', 'id' => '1'})).to eq(true)
@@ -158,5 +242,7 @@ describe "handler" do
       expect($platform_api).to receive(:get).with('bibs/test-nypl/1/is-research').and_raise(Exception.new)
       expect(is_research?({'nyplSource' => 'test-nypl', 'id' => '1'})).to eq(false)
     end
+
+
   end
 end
