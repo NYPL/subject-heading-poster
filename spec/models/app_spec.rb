@@ -52,6 +52,18 @@ describe "handler" do
       expect(result).to eq([1, 'SKIPPING'])
     end
 
+    it "should return SKIPPING STATUS if bib[\"suppressed\"] is true" do
+      suppressed_record = {"id" => 1, "suppressed" => true}
+      allow(self).to receive(:parse_record).and_return(suppressed_record)
+      allow(self).to receive(:is_research?).with(suppressed_record).and_return(true)
+      allow(self).to receive(:store_record).with(suppressed_record).and_return(true)
+
+
+      result = process_record(suppressed_record)
+
+      expect(result).to eq([1, 'SKIPPING'])
+    end
+
     it "should return ERROR if decoded_record is nill" do
       allow(self).to receive(:parse_record).and_return(nil)
 
