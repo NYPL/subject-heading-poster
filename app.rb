@@ -34,7 +34,6 @@ def process_record record
   decoded_record = parse_record(record)
   return [nil, 'ERROR'] unless decoded_record
   do_not_skip = is_research?(decoded_record) && !decoded_record["suppressed"]
-  print do_not_skip
   return [decoded_record['id'], 'SKIPPING'] unless do_not_skip
 
   store_record(decoded_record)
