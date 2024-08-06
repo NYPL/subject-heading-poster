@@ -1,8 +1,8 @@
 language: ruby
 rvm:
-- 2.5
+- 3.2
 before_install:
-- gem install bundler -v 2.3.27
+- gem install bundler
 install:
 - bundle install
 cache:
@@ -10,7 +10,7 @@ cache:
 script:
 - bundle exec rspec
 before_deploy:
-- docker run -it --rm -v "$PWD":/var/task lambci/lambda:build-ruby2.5 bundle install
+- docker run -it --rm -v "$PWD":/var/task lambci/lambda:build-ruby3.2 bundle install
   --deployment
 deploy:
 - provider: lambda
@@ -19,7 +19,7 @@ deploy:
     to the SHEP API
   region: us-east-1
   role: arn:aws:iam::224280085904:role/lambda_basic_execution
-  runtime: ruby2.5
+  runtime: ruby3.2
   timeout: 60
   module_name: app
   handler_name: handle_event
@@ -42,7 +42,7 @@ deploy:
     to the SHEP API
   region: us-east-1
   role: arn:aws:iam::946183545209:role/lambda-full-access
-  runtime: ruby2.5
+  runtime: ruby3.2
   timeout: 60
   module_name: app
   handler_name: handle_event
@@ -65,7 +65,7 @@ deploy:
     to the SHEP API
   region: us-east-1
   role: arn:aws:iam::946183545209:role/lambda-full-access
-  runtime: ruby2.5
+  runtime: ruby3.2
   timeout: 60
   module_name: app
   handler_name: handle_event
