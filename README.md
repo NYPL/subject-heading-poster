@@ -1,3 +1,7 @@
+# Deprecated
+
+This repo is deprecated in favor of https://github.com/NYPL/browseable-term-indexer
+
 # Subject Heading Poster
 The `SubjectHeadingPoster` is a Lambda listening to the `BibStream` to post bib data to the [Subject Heading (SHEP) API](https://github.com/NYPL/subject-headings-explorer-poc/tree/shep-api). It only posts Bib records that it identifies as non-suppressed Research bibs. It does that by first looking for a 910 var field, subfield a ('RL' in the content field means the Bib is Research); if there's no 910|a field it falls back to the `isResearchLayer` which is a Lambda Layer deployed on AWS. The code for the Layer lives in the [`is-research-service`](https://github.com/NYPL/is-research-service) repo.
 
